@@ -1,7 +1,7 @@
 import { CredentialsProvider } from 'next-auth/providers';
 import Credentials from 'next-auth/providers/credentials';
 import { SanityClient } from '@sanity/client';
-import { getUserByEmailQuery } from './queries';
+import { getUserByEmailQuery, getUserByEmailOrUsernameQuery } from './queries';
 import argon2 from 'argon2';
 import { uuid } from '@sanity/uuid';
 
@@ -41,38 +41,76 @@ export const signUpHandler =
 export const SanityCredentials = (
   client: SanityClient,
   userSchema = 'user'
-): CredentialsConfig =>
-  Credentials({
-    name: 'Credentials',
-    id: 'sanity-login',
-    type: 'credentials',
-    credentials: {
-      email: {
-        label: 'Email',
-        type: 'text'
+): CredentialsConfig[] =>
+  [
+    Credentials({
+      name: 'Credentials',
+      id: 'sanity-login-email',
+      type: 'credentials',
+      credentials: {
+        email: {
+          label: 'Email',
+          type: 'text'
+        },
+        password: {
+          label: 'Password',
+          type: 'password'
+        }
       },
-      password: {
-        label: 'Password',
-        type: 'password'
+      async authorize(credentials) {
+        const user = await client.fetch(getUserByEmailQuery, {
+          userSchema,
+          email: credentials?.email
+        });
+  
+        if (!user) throw new Error('Email does not exist');
+  
+        if (await argon2.verify(user.password, credentials?.password!)) {
+          return {
+            email: user.email,
+            name: user.name,
+            image: user.image,
+            role: user.role,
+            id: user._id
+          };
+        }
+  
+        throw new Error('Password Invalid');
       }
-    },
-    async authorize(credentials) {
-      const user = await client.fetch(getUserByEmailQuery, {
-        userSchema,
-        email: credentials?.email
-      });
-
-      if (!user) throw new Error('Email does not exist');
-
-      if (await argon2.verify(user.password, credentials?.password!)) {
-        return {
-          email: user.email,
-          name: user.name,
-          image: user.image,
-          id: user._id
-        };
+    }),
+    Credentials({
+      name: 'Credentials',
+      id: 'sanity-login-username-or-email',
+      type: 'credentials',
+      credentials: {
+        label: {
+          label: 'Username or Email',
+          type: 'text'
+        },
+        password: {
+          label: 'Password',
+          type: 'password'
+        }
+      },
+      async authorize(credentials) {
+        const user = await client.fetch(getUserByEmailOrUsernameQuery, {
+          userSchema,
+          label: credentials?.label
+        });
+  
+        if (!user) throw new Error('Email does not exist');
+  
+        if (await argon2.verify(user.password, credentials?.password!)) {
+          return {
+            email: user.email,
+            name: user.name,
+            image: user.image,
+            role: user.role,
+            id: user._id
+          };
+        }
+  
+        throw new Error('Password Invalid');
       }
-
-      throw new Error('Password Invalid');
-    }
-  });
+    })
+  ]

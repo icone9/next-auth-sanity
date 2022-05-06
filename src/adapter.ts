@@ -24,7 +24,9 @@ export function SanityAdapter(
         _id: `user.${uuid()}`,
         _type: options.schemas.user,
         email: profile.email,
-        name: profile.name,
+        firstname: profile.firstname,
+        lastname: profile.lastname,
+        username: profile.username,
         image: profile.image
       });
 
@@ -32,8 +34,11 @@ export function SanityAdapter(
         id: user._id,
         emailVerified: null,
         email: user.email,
-        name: user.name,
-        image: user.image
+        username: user.username,
+        lastname: user.lastname,
+        firstname: user.firstname,
+        image: user.image,
+        // role: user.role,
       } as AdapterUser;
     },
 
