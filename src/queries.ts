@@ -22,6 +22,9 @@ export const getUserByEmailQuery = groq`
 export const getUserByEmailOrUsernameQuery = groq`
   *[_type == $userSchema && email == $label || username == $label][0]
 `;
+export const getUserByEmailOrUsername = groq`
+  *[_type == $userSchema && email == $email || username == $username][0]
+`;
 
 export const getVerificationTokenQuery = groq`
   *[_type == $verificationTokenSchema && identifier == $identifier && token == $token][0]

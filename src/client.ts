@@ -4,7 +4,9 @@ import axios from 'axios';
 export interface SignUpData {
   email: string;
   password: string;
-  name?: string;
+  firstname?: string;
+  lastname?: string;
+  username?: string;
   image?: string;
 }
 
