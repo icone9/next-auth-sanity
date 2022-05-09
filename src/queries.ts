@@ -16,14 +16,23 @@ export const getUserByProviderAccountIdQuery = groq`
 `;
 
 export const getUserByEmailQuery = groq`
-  *[_type == $userSchema && email == $email][0]
+  *[_type == $userSchema && email == $email][0]{
+    ...,
+    "role": role->{ value }.value
+  }
 `;
 
 export const getUserByEmailOrUsernameQuery = groq`
-  *[_type == $userSchema && email == $label || username == $label][0]
+  *[_type == $userSchema && email == $label || username == $label][0]{
+    ...,
+    "role": role->{ value }.value
+  }
 `;
 export const getUserByEmailOrUsername = groq`
-  *[_type == $userSchema && email == $email || username == $username][0]
+  *[_type == $userSchema && email == $email || username == $username][0]{
+    ...,
+    "role": role->{ value }.value
+  }
 `;
 
 export const getVerificationTokenQuery = groq`
