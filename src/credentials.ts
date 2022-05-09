@@ -68,6 +68,7 @@ export const SanityCredentials = (
           email: credentials?.email
         });
         console.log(credentials?.email, "email: credentials?.email")
+        console.log(user, "user")
         if (!user) throw new Error('Email does not exist');
 
         if (await argon2.verify(user.password, credentials?.password!)) {
