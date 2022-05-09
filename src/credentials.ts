@@ -105,6 +105,7 @@ export const SanityCredentials = (
           label: credentials?.label
         });
         console.log(credentials?.label, "email: credentials?.email")
+        console.log(user, "user")
         
         if (!user) throw new Error('Email does not exist');
   
