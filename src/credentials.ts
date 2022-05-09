@@ -11,7 +11,6 @@ export const signUpHandler =
   (client: SanityClient, userSchema: string = 'user') =>
   async (req: any, res: any) => {
     const { email, password, firstname, lastname, username, image } = req.body;
-    console.log(req.body, 'body')
     const user = await client.fetch(getUserByEmailOrUsername, {
       userSchema,
       email,
@@ -54,7 +53,7 @@ export const SanityCredentials = (
       type: 'credentials',
       credentials: {
         email: {
-          label: 'Email',
+          email: 'Email',
           type: 'text'
         },
         password: {
@@ -68,17 +67,13 @@ export const SanityCredentials = (
           email: credentials?.email
         });
   
-        console.log(user, 'user')
         if (!user) throw new Error('Email does not exist');
-        
-        console.log(user.password, 'user.password')
-        console.log(credentials?.password!, 'credentials?.password!')
 
         if (await argon2.verify(user.password, credentials?.password!)) {
           return {
             email: user.email,
-            name: user.name,
-            image: user.image,
+            username: user.username,
+            avatar: user.avatar,
             role: user.role,
             id: user._id
           };
@@ -112,8 +107,8 @@ export const SanityCredentials = (
         if (await argon2.verify(user.password, credentials?.password!)) {
           return {
             email: user.email,
-            name: user.name,
-            image: user.image,
+            username: user.username,
+            avatar: user.avatar,
             role: user.role,
             id: user._id
           };
