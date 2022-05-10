@@ -13,13 +13,14 @@ export const signUpHandler =
   (client: SanityClient, userSchema: string = 'user') =>
   async (req: any, res: any) => {
     const { email, password, firstname, lastname, username, image } = req.body;
+    console.log(req.body, 'body')
     const user = await client.fetch(getUserForSignUp, {
       userSchema,
       email,
       username
     });
-
-    if (user) {
+    console.log(user, 'user')
+    if (user?._id) {
       res.json({ error: 'User already exist' });
       return;
     }
