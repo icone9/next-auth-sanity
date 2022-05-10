@@ -1,7 +1,9 @@
 import { CredentialsProvider } from 'next-auth/providers';
 import Credentials from 'next-auth/providers/credentials';
 import { SanityClient } from '@sanity/client';
-import { getUserByEmailQuery, getUserByEmailOrUsernameQuery, getUserByEmailOrUsername } from './queries';
+import { getUserByEmailQuery, getUserByEmailOrUsernameQuery, 
+  getUserByEmailOrUsername, getUserForSignUp } from './queries';
+import { signIn } from "next-auth/react"
 import argon2 from 'argon2';
 import { uuid } from '@sanity/uuid';
 
@@ -11,7 +13,7 @@ export const signUpHandler =
   (client: SanityClient, userSchema: string = 'user') =>
   async (req: any, res: any) => {
     const { email, password, firstname, lastname, username, image } = req.body;
-    const user = await client.fetch(getUserByEmailOrUsername, {
+    const user = await client.fetch(getUserForSignUp, {
       userSchema,
       email,
       username
@@ -33,6 +35,12 @@ export const signUpHandler =
       image
     });
 
+    signIn("sanity-login-email", {
+      callbackUrl: "/",
+      email: newUser.email,
+      password
+    })
+    
     res.json({
       email: newUser.email,
       username: newUser.username,

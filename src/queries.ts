@@ -28,6 +28,13 @@ export const getUserByEmailOrUsernameQuery = groq`
     "role": role->{ value }.value
   }
 `;
+
+export const getUserForSignUp = groq`
+  *[_type == $userSchema && email == $email || username == $username][0]{
+    ...,
+    "role": role->{ value }.value
+  }
+`;
 export const getUserByEmailOrUsername = groq`
   *[_type == $userSchema && email == $email || username == $username][0]{
     ...,
