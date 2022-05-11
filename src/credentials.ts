@@ -3,7 +3,6 @@ import Credentials from 'next-auth/providers/credentials';
 import { SanityClient } from '@sanity/client';
 import { getUserByEmailQuery, getUserByEmailOrUsernameQuery, 
   getUserByEmailOrUsername, getUserForSignUp } from './queries';
-import { signIn } from "next-auth/react"
 import argon2 from 'argon2';
 import { uuid } from '@sanity/uuid';
 
@@ -35,12 +34,6 @@ export const signUpHandler =
       username,
       image
     });
-
-    signIn("sanity-login-email", {
-      callbackUrl: "/",
-      email: newUser.email,
-      password
-    })
     
     res.json({
       email: newUser.email,
