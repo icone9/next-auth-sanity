@@ -9,12 +9,11 @@ type CredentialsConfig = ReturnType<CredentialsProvider>;
 
 export const signUpHandler = (client: SanityClient, userSchema: string = 'user') =>
   async (req: any, res: any) => {
-    const { email, password, firstname, lastname, username } = req.body;
+    const { email, password, firstname, lastname } = req.body;
     console.log(req.body, 'body')
-    const user = await client.fetch(getUserForSignUp, {
+    const user = await client.fetch(getUserByEmailQuery, {
       userSchema,
-      email,
-      username
+      email
     });
     console.log(user, 'user')
     if (user?._id) {
@@ -29,13 +28,11 @@ export const signUpHandler = (client: SanityClient, userSchema: string = 'user')
       password: await argon2.hash(password),
       firstname,
       lastname,
-      username
     });
     
     res.json({
       id: newUser._id,
       email: newUser.email,
-      username: newUser.username,
       firstname: newUser.firstname,
       lastname: newUser.lastname
     });
