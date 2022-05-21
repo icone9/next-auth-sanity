@@ -7,7 +7,6 @@ export interface SignUpData {
   firstname?: string;
   lastname?: string;
   username?: string;
-  image?: string;
 }
 
 export const signUp = async (data: SignUpData) => {
