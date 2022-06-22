@@ -10,12 +10,12 @@ type CredentialsConfig = ReturnType<CredentialsProvider>;
 export const signUpHandler = (client: SanityClient, userSchema: string = 'user') =>
   async (req: any, res: any) => {
     const { email, password, firstname, lastname } = req.body;
-    console.log(req.body, 'body')
+
     const user = await client.fetch(getUserByEmailQuery, {
       userSchema,
       email
     });
-    console.log(user, 'user')
+
     if (user?._id) {
       res.json({ error: 'User already exist' });
       return;
@@ -58,13 +58,11 @@ export const SanityCredentials = (
         }
       },
       async authorize(credentials) {
-        console.log(credentials, 'credentials')
         const user = await client.fetch(getUserByEmailQuery, {
           userSchema,
           email: credentials?.email
         });
-        console.log(credentials?.email, "email: credentials?.email")
-        console.log(user, "user")
+
         if (!user) throw new Error('Email does not exist');
 
         if (await argon2.verify(user.password, credentials?.password!)) {
@@ -95,14 +93,10 @@ export const SanityCredentials = (
         }
       },
       async authorize(credentials) {
-        console.log(credentials, 'credentials')
-
         const user = await client.fetch(getUserByEmailOrUsernameQuery, {
           userSchema,
           label: credentials?.label
         });
-        console.log(credentials?.label, "email: credentials?.email")
-        console.log(user, "user")
         
         if (!user) throw new Error('Email does not exist');
   
