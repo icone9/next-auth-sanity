@@ -23,11 +23,11 @@ export function SanityAdapter(
       const user = await client.create({
         _id: `user.${uuid()}`,
         _type: options.schemas.user,
-        email: profile.email,
-        firstname: profile.firstname,
-        lastname: profile.lastname,
-        username: profile.username,
-        image: profile.image
+        email: profile.email || "",
+        firstname: profile.firstname || "",
+        lastname: profile.lastname || "",
+        username: profile.username || "",
+        image: profile.image || ""
       });
 
       return {
@@ -91,12 +91,14 @@ export function SanityAdapter(
     async deleteSession() {},
 
     async updateUser(user) {
-      const { id, name, email, image } = user;
+      const { id, username, fisrtname, lastname, email, image } = user;
 
       const newUser = await client
         .patch(id!)
         .set({
-          name,
+          username,
+          fisrtname, 
+          lastname,
           email,
           image
         })
