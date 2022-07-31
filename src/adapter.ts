@@ -7,6 +7,7 @@ import {
 } from './queries';
 import type { SanityClient } from '@sanity/client';
 import { uuid } from '@sanity/uuid';
+import { Account } from 'next-auth';
 
 export function SanityAdapter(
   client: SanityClient,
@@ -65,7 +66,7 @@ export function SanityAdapter(
       userId,
       type
     }) {
-      return await client.create({
+      await client.create({
         _type: options.schemas.account,
         providerId: provider,
         providerType: type,
@@ -77,7 +78,13 @@ export function SanityAdapter(
           _type: 'reference',
           _ref: userId
         }
-      });
+      })
+
+      return {
+        providerAccountId: `${providerAccountId}`,
+        userId,
+        provider
+      } as Account
     },
 
     async createSession() {
