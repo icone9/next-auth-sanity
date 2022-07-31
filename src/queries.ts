@@ -11,7 +11,7 @@ export const getUserByProviderAccountIdQuery = groq`
     providerId,
     providerType,
     providerAccountId,
-    user->
+    user->{ ..., "role": role->{ value }.value }
   }[0]
 `;
 

@@ -23,11 +23,11 @@ export function SanityAdapter(
       const user = await client.create({
         _id: `user.${uuid()}`,
         _type: options.schemas.user,
-        email: profile.email || null,
-        firstname: profile.firstname || null,
-        lastname: profile.lastname || null,
-        username: profile.username || null,
-        image: profile.image || null
+        email: profile.email,
+        firstname: profile.firstname,
+        lastname: profile.lastname,
+        username: profile.name,
+        avatar: profile.image
       });
 
       return {
@@ -37,7 +37,7 @@ export function SanityAdapter(
         username: user.username,
         lastname: user.lastname,
         firstname: user.firstname,
-        image: user.image,
+        avatar: user.avatar,
         // role: user.role,
       } as AdapterUser;
     },
@@ -91,7 +91,7 @@ export function SanityAdapter(
     async deleteSession() {},
 
     async updateUser(user) {
-      const { id, username, fisrtname, lastname, email, image } = user;
+      const { id, username, fisrtname, lastname, email, avatar } = user;
 
       const newUser = await client
         .patch(id!)
@@ -100,7 +100,7 @@ export function SanityAdapter(
           fisrtname, 
           lastname,
           email,
-          image
+          avatar
         })
         .commit();
 
@@ -137,6 +137,8 @@ export function SanityAdapter(
       return {
         id: account.user._id,
         emailVerified: null,
+        providerId: account?.providerId,
+        providerAccountId: account?.providerAccountId,
         ...account.user
       };
     },
