@@ -65,7 +65,7 @@ export function SanityAdapter(
       userId,
       type
     }) {
-      await client.create({
+      return await client.create({
         _type: options.schemas.account,
         providerId: provider,
         providerType: type,
