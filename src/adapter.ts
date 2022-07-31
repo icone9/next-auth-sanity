@@ -23,11 +23,11 @@ export function SanityAdapter(
       const user = await client.create({
         _id: `user.${uuid()}`,
         _type: options.schemas.user,
-        email: profile.email || "",
-        firstname: profile.firstname || "",
-        lastname: profile.lastname || "",
-        username: profile.username || "",
-        image: profile.image || ""
+        email: profile.email || null,
+        firstname: profile.firstname || null,
+        lastname: profile.lastname || null,
+        username: profile.username || null,
+        image: profile.image || null
       });
 
       return {
