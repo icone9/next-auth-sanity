@@ -17,8 +17,7 @@ export const signUpHandler = (client: SanityClient, userSchema: string = 'user')
     });
 
     if (user?._id) {
-      res.json({ error: 'User already exist' });
-      return;
+      throw new Error('User already exist');
     }
 
     const newUser = await client.create({
